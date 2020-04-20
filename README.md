@@ -83,7 +83,7 @@ Kala
 
 根据当前用户的隐向量与所有未看过的电影的隐向量做内积，得出预估评分，根据预估评分由大到小排序，选出最大的TopN个进行推荐。
 
-!(https://github.com/TzeSing/douban_movie_RecSys/blob/master/pic/offtime.gif?raw=true)
+![offtime](https://github.com/TzeSing/douban_movie_RecSys/blob/master/pic/offtime.gif?raw=true)
 
 
 
@@ -91,7 +91,7 @@ Kala
 
 实时部分是flume从MySQL抽取实时的评分数据，flume的Sink接Kafka的producer(为什么接Kafka？因为发布订阅+高容错+offset)，Spark Streaming从Kafka消费数据，并对DStream进行数据处理，计算实时评分数据(uid,mid,score)的mid与其余所有电影的两两相似度内积，排序后得出TopN个最相似的电影进行实时推荐。
 
-!(https://github.com/TzeSing/douban_movie_RecSys/blob/master/pic/realtime.gif?raw=true)
+![ontime](https://github.com/TzeSing/douban_movie_RecSys/blob/master/pic/realtime.gif?raw=true)
 
 
 
