@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% block header %}
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+{% endblock %}
+<div class="jumbotron" id="login-welcome">
+  <div class="container">
+    <h1 class="display-3" style="color: #ffffff;">Welcome '{{ current_user.username }}'</h1>
+    <p style="color: #ffffff;">This is the members-only page.</p>
+  </div>
+</div>
+<div class="container">
+  <span>评分历史:</span>
+  <ul class="list-group">
+<!--    {% for movie in popular5_movies %}-->
+<!--    <li class="list-group-item">-->
+<!--      <a href="/movie_info/{{ movie[0] }}">-->
+<!--        <strong>{{ movie[1] }}</strong>-->
+<!--      </a>-->
+<!--      <span class="badge">评分人数：{{ movie[2] }}</span>-->
+<!--    </li>-->
+<!--    {% endfor %}-->
+  </ul>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(document).ready(function () {
+    var username = $("#username").attr("data-value");
+    var csrftoken = "{{ csrf_token() }}"
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+          if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken)
+          }
+      }
+    })
+    $.ajax({
+        type: "POST",
+        url: "/users/rate_history/",
+        dataType: "json",
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify({
+          username: username
+        }),
+        success(data) {
+          for (var i = 0; i < data.movies.length; i++) {
+            $('<li class="list-group-item"><strong>' + data.movies[i] + '<span class="badge">评分:' + data.scores[i] + '.0</span></strong></li>').appendTo('.list-group');
+          }
+        }
+      })
+  })
+</script>
+{% endblock %}

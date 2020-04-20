@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% block header %}
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+{% endblock %}
+<div class="jumbotron" id="home-welcome">
+  <div class="container">
+    <h1 class="display-3" style="color: #ffffff">Welcome to Douban movie RecSys</h1>
+    <p style="color: #ffffff">This is a Douban movie recommender system. The first goal of this recommendation system is to help users find content which will be of interest to them.</p>
+    <p><a href="https://github.com/TzeSing/douban_movie_RecSys" class="btn btn-primary btn-large">View source code in Github &raquo;</a></p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4" style="background: #f8f8f8;">
+      <h2><i class="fa fa-youtube-play" aria-hidden="true"></i> Offline recommendation</h2>
+      <p>根据ALS训练的模型, 会推荐与用户最相似的几部电影.</p>
+      <p><a class="btn btn-outline-secondary" href="" id="rec_moive">Enter &raquo;</a></p>
+    </div>
+    <div class="col-lg-4">
+      <h2><i class="fa fa-file-video-o" aria-hidden="true"></i> Real-time recommendation</h2>
+      <p>当你搜索电影，并且评分后，会实时推荐与该电影最相似的几部电影.</p>
+      <p><a href="/real_time/" class="btn btn-outline-secondary">Enter &raquo;</a></p>
+   </div>
+    <div class="col-lg-4" style="background: #f8f8f8;">
+      <h2><i class="fa fa-play" aria-hidden="true"></i> Popular movies recommendation</h2>
+      <p>推荐最热门和评分人数最多的电影.</p>
+      <br>
+      <p><a href="/popular/" class="btn btn-outline-secondary">Enter &raquo;</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(document).ready(function () {
+    var username = $("#username").attr("data-value");
+    $("#rec_moive").attr('href', '/movie_rec/' + username);
+  })
+</script>
+{% endblock %}

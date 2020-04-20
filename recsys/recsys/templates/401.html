@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block page_title %}Unauthorized{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <div class="text-center">
+        <h1>401</h1>
+        <p>请先登录. 点击跳转<a href="{{ url_for('public.home')}}">登录</a>页面或者去<a href="{{ url_for('public.register') }}">注册</a>新账号.
+        </p>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="jumbotron" id="login-welcome" style="margin-top: -30px;">
+  <div class="container">
+    <h1 class="display-3" style="color: #ffffff;">你可能感兴趣的电影</h1>
+    <p style="color: #ffffff;">This is the members-only page.</p>
+  </div>
+</div>
+<div class="container">
+  <ul class="list-group">
+    {% for pair in pairs %}
+    <li class="list-group-item">
+      <a href="/movie_info/{{ pair[1] }}">
+        <strong>{{ pair[0] }}</strong>
+      </a>
+      <span class="badge"></span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

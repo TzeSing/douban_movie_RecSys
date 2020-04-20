@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% block header %}
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<style>
+  .fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+  }
+  .navbar-expand-lg .navbar-collapse {
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-weight: 400;
+    background-color: #fff;
+    color: #212529;
+    text-align: left;
+  }
+  .jumbotron {
+    padding: 12rem 1rem;
+    margin-bottom: 0;
+    background-color: #e9ecef;
+    border-radius: 0.3rem;
+  }
+  .divider-1 span {
+    display: inline-block;
+    width: 200px;
+    height: 1px;
+    background: #ddd;
+  }
+</style>
+{% endblock %}
+<div class="jumbotron" id="login-welcome" style="margin-top: -20px;" data-value="{{ csrf_token() }}">
+  <div class="container">
+    <h1 class="display-3" id="movie_name" data-value="{{ mid }}" style="color: #ffffff;">{{ movie_name }}</h1>
+    <p style="color: #ffffff;">需要登录后才能评分.(已经登录请忽略)</p>
+  </div>
+</div>
+
+<div class="value-props" style="padding: 20px 0; background: #f8f8f8;">
+  <div class="container" style="padding: 5rem 0 5rem;">
+    <div class="row">
+      <div class="col-md-2">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <br>
+        <span class="badge">{{ score_dict[5.0] }} 人评价</span>
+      </div>
+      <div class="col-md-2">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <br>
+        <span class="badge">{{ score_dict[4.0] }} 人评价</span>
+      </div>
+      <div class="col-md-2">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <br>
+        <span class="badge">{{ score_dict[3.0] }} 人评价</span>
+      </div>
+      <div class="col-md-2">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <br>
+        <span class="badge">{{ score_dict[2.0] }} 人评价</span>
+      </div>
+      <div class="col-md-2">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        <br>
+        <span class="badge">{{ score_dict[1.0] }} 人评价</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-container" style="padding: 20px 0;">
+  <div class="container" style="padding: 0rem 0 3rem; min-height: 30rem; position: relative;">
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <h2 style="font-weight: 300;">点击下面按钮进行评分</h2>
+    </div>
+    <div class="divider-1 wow fadeInUp animated" style="visibility: visible; animation-name: fadeInUp; margin-bottom: 20px; display: flex; align-items: center; justify-content: center;"><span></span></div>
+    <div class="badges-line" style="display: flex; align-items: center; justify-content: center;">
+      <div class="btn-group btn-group-lg" role="group" aria-label="..." style="">
+        <button type="button" class="btn btn-default" value="1">1</button>
+        <button type="button" class="btn btn-default" value="2">2</button>
+        <button type="button" class="btn btn-default" value="3">3</button>
+        <button type="button" class="btn btn-default" value="4">4</button>
+        <button type="button" class="btn btn-default" value="5">5</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 20px;">
+  <ul class="list-group" id="recommend">
+
+  </ul>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(document).ready(function () {
+    $('.btn').click(function (event) {
+      var username = $("#username").attr("data-value");
+      var mid = $("#movie_name").attr("data-value");
+      var score = $(this).attr("value");
+      var csrftoken = "{{ csrf_token() }}"
+      $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+              if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken)
+              }
+          }
+      })
+      $.ajax({
+        type: "POST",
+        url: "/rate_movie/",
+        dataType: "json",
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify({
+          username: username,
+          mid: mid,
+          score: score
+        }),
+        success(data) {
+          alert("评分成功");
+          alert("稍等5秒会产生准实时推荐")
+          // 推荐
+          $.ajax({
+            type: "POST",
+            url: "/get_realtime_rec/",
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify({
+              username: username,
+              mid: mid,
+            }),
+            success(data) {
+              $('.value-props').hide()
+              $('.section-container').hide()
+              for (var i = 0; i < data.movie_name_recs.length; i++) {
+                $('#recommend').append('<li class="list-group-item"><a href="#"><strong>' + data.movie_name_recs[i] + '</strong></a></li>')
+              }
+            }
+          })
+        }
+      })
+    });
+  })
+</script>
+{% endblock %}

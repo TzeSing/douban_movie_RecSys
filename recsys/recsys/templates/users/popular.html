@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="jumbotron" id="login-welcome" style="margin-top: -30px;">
+  <div class="container">
+    <h1 class="display-3" style="color: #ffffff;">Popular page</h1>
+    <p style="color: #ffffff;">This is the members-only page.</p>
+  </div>
+</div>
+<div class="container">
+  <ul class="list-group">
+    {% for movie in popular5_movies %}
+    <li class="list-group-item">
+      <a href="/movie_info/{{ movie[0] }}">
+        <strong>{{ movie[1] }}</strong>
+      </a>
+      <span class="badge">评分人数：{{ movie[2] }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
