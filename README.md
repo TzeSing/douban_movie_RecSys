@@ -11,6 +11,7 @@
     - 离线
     - 实时
     - 热评
+- ALS算法原理——矩阵分解
 
 
 
@@ -98,5 +99,31 @@ Kala
 #### 热评
 
 如果遇到的是冷启动问题，新用户实时对某电影评分，但因为没有历史数据导致模型没有该用户的隐向量，就推荐最多人评分过的电影。
+
+---
+
+
+
+### ALS算法原理——矩阵分解
+
+UserCF与ItemCF天然的缺陷是——头部效应明显，处理稀疏向量能力弱
+
+为了增加模型泛化能力，提出了矩阵分解，使用更稠密的隐向量表示用户和物品，一定程度上弥补了协同过滤处理稀疏矩阵能力不足的问题
+
+
+
+Spark ALS 模型代码如下
+
+```scala
+// Build the recommendation model using ALS on the training data
+val als = new ALS()
+  .setMaxIter(5)
+  .setRegParam(0.01)
+  .setUserCol("userId")
+  .setItemCol("movieId")
+  .setRatingCol("rating")
+val model = als.fit(training)
+```
+
 
 
