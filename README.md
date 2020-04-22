@@ -110,6 +110,8 @@ UserCF与ItemCF天然的缺陷是——头部效应明显，处理稀疏向量�
 
 为了增加模型泛化能力，提出了矩阵分解，使用更稠密的隐向量表示用户和物品，一定程度上弥补了协同过滤处理稀疏矩阵能力不足的问题
 
+![MF](https://github.com/TzeSing/douban_movie_RecSys/blob/master/pic/MF.png?raw=true)
+
 
 
 Spark ALS 模型代码如下
@@ -117,6 +119,7 @@ Spark ALS 模型代码如下
 ```scala
 // Build the recommendation model using ALS on the training data
 val als = new ALS()
+  .setRank(2)
   .setMaxIter(5)
   .setRegParam(0.01)
   .setUserCol("userId")
@@ -124,6 +127,12 @@ val als = new ALS()
   .setRatingCol("rating")
 val model = als.fit(training)
 ```
+
+ `setRank` 就是上面图中分解成多少维隐向量，即用多少维隐向量来表示一个用户或者一个物品，这里设为2
+
+一个用户的隐向量与一个物品的隐向量的内积就是该用户对该物品的预测评分
+
+这个隐向量维度 k 决定隐向量表达能力的强弱，k 越小包含信息越少，泛化程度高，k 越大包含信息越多，泛化程度会降低 
 
 
 
